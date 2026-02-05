@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Github, Globe, Image as ImageIcon, FolderOpen, Zap, Calendar, Trophy, Users, ArrowRight, Code2 } from 'lucide-react'
+import { Github, Globe, Image as ImageIcon, FolderOpen, Zap, Calendar, Trophy, Users, ArrowRight, Code2, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
@@ -7,6 +7,8 @@ function ProjectGallery() {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [selectedScreenshots, setSelectedScreenshots] = useState(null)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   useEffect(() => {
     fetchProjects()
@@ -122,7 +124,7 @@ function ProjectGallery() {
                 <Trophy size={28} />
               </div>
               <h3>Win Big</h3>
-              <p>Compete for cash prizes, mentorship opportunities, and industry recognition.</p>
+              <p>Compete for cash prizes and certificates.</p>
             </div>
           </div>
         </div>
@@ -218,10 +220,16 @@ function ProjectGallery() {
                         )}
 
                         {project.screenshots && project.screenshots.length > 1 && (
-                          <span className="project-link" style={{ cursor: 'default' }}>
+                          <button 
+                            onClick={() => {
+                              setSelectedScreenshots(project.screenshots)
+                              setCurrentImageIndex(0)
+                            }}
+                            className="project-link"
+                          >
                             <ImageIcon size={14} />
                             {project.screenshots.length} Screenshots
-                          </span>
+                          </button>
                         )}
                       </div>
 
@@ -245,7 +253,7 @@ function ProjectGallery() {
         <div className="container">
           <div className="cta-content">
             <h2>Ready to Join the Challenge?</h2>
-            <p>Submit your project and compete with developers worldwide</p>
+            <p>Submit your projects to us.</p>
             <Link to="/upload" className="btn btn-primary btn-lg">
               <Zap size={20} />
               Submit Your Project Now
@@ -253,6 +261,46 @@ function ProjectGallery() {
           </div>
         </div>
       </section>
+      {/* Screenshot Modal */}
+      {selectedScreenshots && (
+        <div className="screenshot-modal" onClick={() => setSelectedScreenshots(null)}>
+          <div className="screenshot-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="screenshot-modal-close"
+              onClick={() => setSelectedScreenshots(null)}
+            >
+              <X size={24} />
+            </button>
+            
+            <div className="screenshot-modal-image">
+              <img 
+                src={selectedScreenshots[currentImageIndex]} 
+                alt={`Screenshot ${currentImageIndex + 1} of ${selectedScreenshots.length}`}
+              />
+            </div>
+            
+            {selectedScreenshots.length > 1 && (
+              <div className="screenshot-modal-nav">
+                <button 
+                  onClick={() => setCurrentImageIndex(prev => prev > 0 ? prev - 1 : selectedScreenshots.length - 1)}
+                  className="screenshot-modal-btn"
+                >
+                  Previous
+                </button>
+                <span className="screenshot-modal-counter">
+                  {currentImageIndex + 1} / {selectedScreenshots.length}
+                </span>
+                <button 
+                  onClick={() => setCurrentImageIndex(prev => prev < selectedScreenshots.length - 1 ? prev + 1 : 0)}
+                  className="screenshot-modal-btn"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

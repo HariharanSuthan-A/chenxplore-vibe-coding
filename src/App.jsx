@@ -4,6 +4,7 @@ import ProjectGallery from './components/ProjectGallery'
 import UploadForm from './components/UploadForm'
 import './styles/theme.css'
 import './styles/theme-competition.css'
+import './styles/screenshot-modal.css'
 
 function App() {
   return (
@@ -19,10 +20,7 @@ function App() {
         <footer className="footer">
           <div className="container footer-content">
             <p className="footer-text">
-              © {new Date().getFullYear()} Chexplore. Share your creations with the world.
-            </p>
-            <p className="footer-text">
-              Made with 💚 for developers
+              © chenxplore2026 -vibe-coding-challenge
             </p>
           </div>
         </footer>
