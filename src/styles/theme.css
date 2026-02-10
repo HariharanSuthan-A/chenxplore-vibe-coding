@@ -1,59 +1,59 @@
-/* Green Latte Minimal Theme */
+/* Code Vibe Theme - Dark Coding Aesthetic */
 :root {
-  /* Primary Colors - Green Latte Palette */
-  --primary-50: #f0fdf4;
-  --primary-100: #dcfce7;
-  --primary-200: #bbf7d0;
-  --primary-300: #86efac;
-  --primary-400: #4ade80;
-  --primary-500: #22c55e;
-  --primary-600: #16a34a;
-  --primary-700: #15803d;
-  --primary-800: #166534;
-  --primary-900: #14532d;
+  /* Primary Colors - Neon Code Palette */
+  --primary-50: #e0f7ff;
+  --primary-100: #b3ecff;
+  --primary-200: #80e0ff;
+  --primary-300: #4dd4ff;
+  --primary-400: #26c9ff;
+  --primary-500: #00bfff;
+  --primary-600: #0099cc;
+  --primary-700: #007399;
+  --primary-800: #004d66;
+  --primary-900: #002633;
   
-  /* Latte/Cream Colors */
-  --latte-50: #fdfbf7;
-  --latte-100: #faf6ed;
-  --latte-200: #f5ecd8;
-  --latte-300: #ede0c0;
-  --latte-400: #e3d0a3;
-  --latte-500: #d4b87a;
-  --latte-600: #c4a055;
-  --latte-700: #a68345;
-  --latte-800: #886a3d;
-  --latte-900: #6f5534;
+  /* Dark Code Background Colors */
+  --latte-50: #1a1a2e;
+  --latte-100: #16213e;
+  --latte-200: #0f3460;
+  --latte-300: #1e3a5f;
+  --latte-400: #2d4a6f;
+  --latte-500: #3d5a7f;
+  --latte-600: #4d6a8f;
+  --latte-700: #5d7a9f;
+  --latte-800: #6d8aaf;
+  --latte-900: #7d9abf;
   
-  /* Neutral Colors */
-  --neutral-50: #fafafa;
-  --neutral-100: #f5f5f5;
-  --neutral-200: #e5e5e5;
-  --neutral-300: #d4d4d4;
-  --neutral-400: #a3a3a3;
-  --neutral-500: #737373;
-  --neutral-600: #525252;
-  --neutral-700: #404040;
-  --neutral-800: #262626;
-  --neutral-900: #171717;
+  /* Neutral Colors - Dark Theme */
+  --neutral-50: #0f0f1a;
+  --neutral-100: #1a1a2e;
+  --neutral-200: #2a2a3e;
+  --neutral-300: #3a3a4e;
+  --neutral-400: #5a5a6e;
+  --neutral-500: #7a7a8e;
+  --neutral-600: #9a9aae;
+  --neutral-700: #babace;
+  --neutral-800: #dadade;
+  --neutral-900: #fafaff;
   
   /* Semantic Colors */
-  --background: var(--latte-50);
-  --surface: #ffffff;
-  --text-primary: var(--neutral-800);
-  --text-secondary: var(--neutral-600);
-  --text-muted: var(--neutral-400);
-  --border: var(--latte-300);
-  --border-light: var(--latte-200);
-  --accent: var(--primary-600);
-  --accent-light: var(--primary-100);
-  --accent-dark: var(--primary-800);
+  --background: #0d0d1a;
+  --surface: #1a1a2e;
+  --text-primary: #e0e0ff;
+  --text-secondary: #a0a0bf;
+  --text-muted: #6a6a8f;
+  --border: #2a2a4e;
+  --border-light: #1e1e3e;
+  --accent: #00d4ff;
+  --accent-light: #4dd4ff;
+  --accent-dark: #0099cc;
   
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* Neon Glow Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 212 255 / 0.1);
+  --shadow: 0 1px 3px 0 rgb(0 212 255 / 0.2), 0 1px 2px -1px rgb(0 212 255 / 0.2);
+  --shadow-md: 0 4px 6px -1px rgb(0 212 255 / 0.2), 0 2px 4px -2px rgb(0 212 255 / 0.2);
+  --shadow-lg: 0 10px 15px -3px rgb(0 212 255 / 0.2), 0 4px 6px -4px rgb(0 212 255 / 0.2);
+  --shadow-xl: 0 20px 25px -5px rgb(0 212 255 / 0.3), 0 8px 10px -6px rgb(0 212 255 / 0.3);
   
   /* Transitions */
   --transition-fast: 150ms ease;
