@@ -154,8 +154,8 @@ export function LandingPage(): string {
                 </svg>
               </div>
               <h3 class="detail-title">Date</h3>
-              <p class="detail-value">6th May 2026</p>
-              <p class="detail-note">Competition Month: May</p>
+              <p class="detail-value">6th march 2026</p>
+              <p class="detail-note">Competition Month: March</p>
             </div>
             <div class="detail-card" id="detail-format">
               <div class="detail-icon">
@@ -260,6 +260,20 @@ export function LandingPage(): string {
         </div>
       </section>
 
+      <!-- Lightbox Modal -->
+      <div id="lightbox" class="lightbox">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close lightbox">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="lightbox-content">
+          <img id="lightbox-img" src="" alt="Project Screenshot" />
+        </div>
+        <div class="lightbox-info">
+          <h4 id="lightbox-title"></h4>
+          <p id="lightbox-team"></p>
+        </div>
+      </div>
+
     </main>
     ${Footer()}
   `;
@@ -286,17 +300,34 @@ async function fetchAndRenderProjects() {
       return;
     }
 
-    grid.innerHTML = projects.map(project => `
+    grid.innerHTML = projects.map(project => {
+      const screenshots = project.screenshots || [];
+      const hasScreenshots = screenshots.length > 0;
+
+      return `
       <div class="project-card">
-        <div class="project-image-gallery">
-          ${project.screenshots && project.screenshots.length > 0
-        ? `<img src="${project.screenshots[0]}" alt="${project.project_name}" class="main-screenshot" />`
-        : `<div class="no-image-placeholder">No screenshots provided</div>`
-      }
-          ${project.screenshots && project.screenshots.length > 1
-        ? `<div class="thumbnail-count">+${project.screenshots.length - 1} more</div>`
-        : ''
-      }
+        <div class="project-image-gallery" data-project-id="${project.id}">
+          ${hasScreenshots
+          ? `
+            <div class="main-screenshot-container">
+              <img src="${screenshots[0]}" alt="${project.project_name}" class="main-screenshot" data-index="0" />
+              ${screenshots.length > 1 ? `<div class="thumbnail-count">${screenshots.length} Screens</div>` : ''}
+            </div>
+            ${screenshots.length > 1
+            ? `
+                <div class="screenshot-thumbnails">
+                  ${screenshots.map((url: string, idx: number) => `
+                    <div class="thumb-item ${idx === 0 ? 'active' : ''}" data-index="${idx}">
+                      <img src="${url}" alt="Thumbnail ${idx + 1}" />
+                    </div>
+                  `).join('')}
+                </div>
+              `
+            : ''
+          }
+            `
+          : `<div class="no-image-placeholder">No screenshots provided</div>`
+        }
         </div>
         <div class="project-card-content">
           <h3 class="project-card-title">${project.project_name}</h3>
@@ -304,21 +335,79 @@ async function fetchAndRenderProjects() {
           <p class="project-card-desc">${project.description.length > 120 ? project.description.substring(0, 120) + '...' : project.description}</p>
           <div class="project-card-footer">
             ${project.project_url
-        ? `<a href="${project.project_url}" target="_blank" class="project-card-link">
+          ? `<a href="${project.project_url}" target="_blank" class="project-card-link">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                   Project Link
                 </a>`
-        : '<span></span>'
-      }
+          : '<span></span>'
+        }
           </div>
         </div>
       </div>
-    `).join('');
+    `}).join('');
+
+    // Attach interaction handlers for the galleries
+    attachGalleryHandlers(projects);
 
   } catch (error) {
     console.error('Error fetching projects:', error);
     grid.innerHTML = '<p class="error-text">Failed to load projects. Please refresh the page.</p>';
   }
+}
+
+function attachGalleryHandlers(projects: any[]) {
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const lightboxTitle = document.getElementById('lightbox-title');
+  const lightboxTeam = document.getElementById('lightbox-team');
+  const lightboxClose = document.getElementById('lightbox-close');
+
+  document.querySelectorAll('.project-image-gallery').forEach(gallery => {
+    const projectId = gallery.getAttribute('data-project-id');
+    const project = projects.find(p => p.id === projectId);
+    if (!project || !project.screenshots) return;
+
+    const mainImg = gallery.querySelector('.main-screenshot') as HTMLImageElement;
+    const thumbs = gallery.querySelectorAll('.thumb-item');
+
+    // Thumbnail click -> switch main image
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', (e) => {
+        const idx = parseInt((e.currentTarget as HTMLElement).getAttribute('data-index') || '0');
+        mainImg.src = project.screenshots[idx];
+        mainImg.setAttribute('data-index', idx.toString());
+
+        // Update active state
+        thumbs.forEach(t => t.classList.remove('active'));
+        (e.currentTarget as HTMLElement).classList.add('active');
+      });
+    });
+
+    // Main image click -> open lightbox
+    mainImg?.addEventListener('click', () => {
+      const currentIdx = parseInt(mainImg.getAttribute('data-index') || '0');
+      if (lightbox && lightboxImg) {
+        lightboxImg.src = project.screenshots[currentIdx];
+        if (lightboxTitle) lightboxTitle.textContent = project.project_name;
+        if (lightboxTeam) lightboxTeam.textContent = `By ${project.team_name}`;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+      }
+    });
+  });
+
+  // Close lightbox
+  lightboxClose?.addEventListener('click', () => {
+    lightbox?.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+
+  lightbox?.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      lightbox?.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
 }
 
 export function initLandingPage() {

@@ -3,18 +3,18 @@ import { Footer } from '../components/Footer';
 import { supabase } from '../supabase';
 
 interface FormErrors {
-    project_name?: string;
-    description?: string;
-    team_name?: string;
-    email?: string;
-    media?: string;
+  project_name?: string;
+  description?: string;
+  team_name?: string;
+  email?: string;
+  media?: string;
 }
 
 let selectedFiles: File[] = [];
 let previewUrls: string[] = [];
 
 export function SubmitPage(): string {
-    return `
+  return `
     ${Navbar()}
     <main class="submit-page">
       <div class="container">
@@ -123,7 +123,7 @@ export function SubmitPage(): string {
                   <line x1="12" y1="3" x2="12" y2="15"/>
                 </svg>
                 <p class="upload-text">Drag & drop images here or <span class="upload-link">browse</span></p>
-                <p class="upload-hint">JPG, PNG — Max 5 files</p>
+                <p class="upload-hint">JPG, PNG — Max 5MB per file (Up to 5 files)</p>
                 <input
                   type="file"
                   id="screenshot-input"
@@ -170,99 +170,99 @@ export function SubmitPage(): string {
 }
 
 function validateForm(): FormErrors {
-    const errors: FormErrors = {};
+  const errors: FormErrors = {};
 
-    const projectName = (document.getElementById('project_name') as HTMLInputElement)?.value.trim();
-    const description = (document.getElementById('description') as HTMLTextAreaElement)?.value.trim();
-    const teamName = (document.getElementById('team_name') as HTMLInputElement)?.value.trim();
-    const email = (document.getElementById('email') as HTMLInputElement)?.value.trim();
-    const projectUrl = (document.getElementById('project_url') as HTMLInputElement)?.value.trim();
+  const projectName = (document.getElementById('project_name') as HTMLInputElement)?.value.trim();
+  const description = (document.getElementById('description') as HTMLTextAreaElement)?.value.trim();
+  const teamName = (document.getElementById('team_name') as HTMLInputElement)?.value.trim();
+  const email = (document.getElementById('email') as HTMLInputElement)?.value.trim();
+  const projectUrl = (document.getElementById('project_url') as HTMLInputElement)?.value.trim();
 
-    if (!projectName) {
-        errors.project_name = 'Project name is required';
+  if (!projectName) {
+    errors.project_name = 'Project name is required';
+  }
+
+  if (!description) {
+    errors.description = 'Project description is required';
+  }
+
+  if (!teamName) {
+    errors.team_name = 'Team name is required';
+  }
+
+  if (!email) {
+    errors.email = 'Email is required';
+  } else {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      errors.email = 'Please enter a valid email address';
     }
+  }
 
-    if (!description) {
-        errors.description = 'Project description is required';
+  // Either project URL or at least 1 screenshot required
+  if (!projectUrl && selectedFiles.length === 0) {
+    errors.media = 'Either a Project URL or at least 1 screenshot is required';
+  }
+
+  // Validate URL format if provided
+  if (projectUrl) {
+    try {
+      new URL(projectUrl);
+    } catch {
+      errors.media = 'Please enter a valid URL';
     }
+  }
 
-    if (!teamName) {
-        errors.team_name = 'Team name is required';
-    }
-
-    if (!email) {
-        errors.email = 'Email is required';
-    } else {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            errors.email = 'Please enter a valid email address';
-        }
-    }
-
-    // Either project URL or at least 1 screenshot required
-    if (!projectUrl && selectedFiles.length === 0) {
-        errors.media = 'Either a Project URL or at least 1 screenshot is required';
-    }
-
-    // Validate URL format if provided
-    if (projectUrl) {
-        try {
-            new URL(projectUrl);
-        } catch {
-            errors.media = 'Please enter a valid URL';
-        }
-    }
-
-    return errors;
+  return errors;
 }
 
 function showErrors(errors: FormErrors) {
-    // Clear all errors first
-    document.querySelectorAll('.form-error').forEach(el => {
-        el.textContent = '';
-    });
-    document.querySelectorAll('.form-group').forEach(el => {
-        el.classList.remove('has-error');
-    });
+  // Clear all errors first
+  document.querySelectorAll('.form-error').forEach(el => {
+    el.textContent = '';
+  });
+  document.querySelectorAll('.form-group').forEach(el => {
+    el.classList.remove('has-error');
+  });
 
-    // Show specific errors
-    if (errors.project_name) {
-        const el = document.getElementById('error-project_name');
-        const fg = document.getElementById('fg-project-name');
-        if (el) el.textContent = errors.project_name;
-        if (fg) fg.classList.add('has-error');
-    }
-    if (errors.description) {
-        const el = document.getElementById('error-description');
-        const fg = document.getElementById('fg-description');
-        if (el) el.textContent = errors.description;
-        if (fg) fg.classList.add('has-error');
-    }
-    if (errors.team_name) {
-        const el = document.getElementById('error-team_name');
-        const fg = document.getElementById('fg-team-name');
-        if (el) el.textContent = errors.team_name;
-        if (fg) fg.classList.add('has-error');
-    }
-    if (errors.email) {
-        const el = document.getElementById('error-email');
-        const fg = document.getElementById('fg-email');
-        if (el) el.textContent = errors.email;
-        if (fg) fg.classList.add('has-error');
-    }
-    if (errors.media) {
-        const el = document.getElementById('error-media');
-        const fg = document.getElementById('fg-screenshots');
-        if (el) el.textContent = errors.media;
-        if (fg) fg.classList.add('has-error');
-    }
+  // Show specific errors
+  if (errors.project_name) {
+    const el = document.getElementById('error-project_name');
+    const fg = document.getElementById('fg-project-name');
+    if (el) el.textContent = errors.project_name;
+    if (fg) fg.classList.add('has-error');
+  }
+  if (errors.description) {
+    const el = document.getElementById('error-description');
+    const fg = document.getElementById('fg-description');
+    if (el) el.textContent = errors.description;
+    if (fg) fg.classList.add('has-error');
+  }
+  if (errors.team_name) {
+    const el = document.getElementById('error-team_name');
+    const fg = document.getElementById('fg-team-name');
+    if (el) el.textContent = errors.team_name;
+    if (fg) fg.classList.add('has-error');
+  }
+  if (errors.email) {
+    const el = document.getElementById('error-email');
+    const fg = document.getElementById('fg-email');
+    if (el) el.textContent = errors.email;
+    if (fg) fg.classList.add('has-error');
+  }
+  if (errors.media) {
+    const el = document.getElementById('error-media');
+    const fg = document.getElementById('fg-screenshots');
+    if (el) el.textContent = errors.media;
+    if (fg) fg.classList.add('has-error');
+  }
 }
 
 function renderPreviews() {
-    const grid = document.getElementById('preview-grid');
-    if (!grid) return;
+  const grid = document.getElementById('preview-grid');
+  if (!grid) return;
 
-    grid.innerHTML = previewUrls.map((url, index) => `
+  grid.innerHTML = previewUrls.map((url, index) => `
     <div class="preview-item" id="preview-${index}">
       <img src="${url}" alt="Screenshot ${index + 1}" />
       <button type="button" class="preview-remove" data-index="${index}" aria-label="Remove screenshot">
@@ -271,190 +271,210 @@ function renderPreviews() {
     </div>
   `).join('');
 
-    // Attach remove handlers
-    grid.querySelectorAll('.preview-remove').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = parseInt((e.currentTarget as HTMLElement).getAttribute('data-index') || '0');
-            selectedFiles.splice(index, 1);
-            previewUrls.splice(index, 1);
-            renderPreviews();
-        });
+  // Attach remove handlers
+  grid.querySelectorAll('.preview-remove').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = parseInt((e.currentTarget as HTMLElement).getAttribute('data-index') || '0');
+      selectedFiles.splice(index, 1);
+      previewUrls.splice(index, 1);
+      renderPreviews();
     });
+  });
 }
 
 function handleFiles(files: FileList) {
-    const remaining = 5 - selectedFiles.length;
-    const newFiles = Array.from(files).slice(0, remaining);
+  const remaining = 5 - selectedFiles.length;
+  const newFiles = Array.from(files).slice(0, remaining);
 
-    for (const file of newFiles) {
-        if (!['image/jpeg', 'image/png'].includes(file.type)) continue;
-        if (selectedFiles.length >= 5) break;
-
-        selectedFiles.push(file);
-        const url = URL.createObjectURL(file);
-        previewUrls.push(url);
+  for (const file of newFiles) {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      alert(`File ${file.name} is not a supported format (JPG, PNG, WEBP)`);
+      continue;
     }
 
-    renderPreviews();
+    // Limit size to 5MB (Supabase free tier default storage limit)
+    if (file.size > 5 * 1024 * 1024) {
+      alert(`File ${file.name} is too large. Max size is 5MB.`);
+      continue;
+    }
+
+    if (selectedFiles.length >= 5) break;
+
+    selectedFiles.push(file);
+    const url = URL.createObjectURL(file);
+    previewUrls.push(url);
+  }
+
+  renderPreviews();
 }
 
 async function uploadScreenshots(): Promise<string[]> {
-    const urls: string[] = [];
+  const urls: string[] = [];
 
-    for (const file of selectedFiles) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `screenshots/${fileName}`;
+  for (const file of selectedFiles) {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `screenshots/${fileName}`;
 
-        const { error } = await supabase.storage
-            .from('project-screenshots')
-            .upload(filePath, file);
+    try {
+      const { error } = await supabase.storage
+        .from('project-screenshots')
+        .upload(filePath, file);
 
-        if (error) {
-            console.error('Upload error:', error);
-            throw new Error(`Failed to upload ${file.name}`);
+      if (error) {
+        console.error('Upload error detail:', error);
+        if (error.message.includes('bucket not found')) {
+          throw new Error("Supabase Storage bucket 'project-screenshots' not found. Please create it and make it public.");
+        } else if (error.message.includes('Row-level security policy')) {
+          throw new Error("Supabase Storage permission denied. Please add an RLS policy for anonymous uploads.");
         }
+        throw new Error(`Failed to upload ${file.name}: ${error.message}`);
+      }
 
-        const { data: urlData } = supabase.storage
-            .from('project-screenshots')
-            .getPublicUrl(filePath);
+      const { data: urlData } = supabase.storage
+        .from('project-screenshots')
+        .getPublicUrl(filePath);
 
-        urls.push(urlData.publicUrl);
+      urls.push(urlData.publicUrl);
+    } catch (err: any) {
+      console.error('Caught upload error:', err);
+      throw err;
     }
+  }
 
-    return urls;
+  return urls;
 }
 
 async function handleSubmit(e: Event) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-        showErrors(errors);
-        // Scroll to first error
-        const firstError = document.querySelector('.has-error');
-        if (firstError) {
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return;
+  const errors = validateForm();
+  if (Object.keys(errors).length > 0) {
+    showErrors(errors);
+    // Scroll to first error
+    const firstError = document.querySelector('.has-error');
+    if (firstError) {
+      firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return;
+  }
+
+  // Show loading state
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const btnText = submitBtn.querySelector('.btn-text') as HTMLElement;
+  const btnLoader = document.getElementById('btn-loader') as HTMLElement;
+
+  submitBtn.disabled = true;
+  btnText.textContent = 'Submitting...';
+  btnLoader.style.display = 'inline-flex';
+
+  try {
+    // Upload screenshots if any
+    let screenshotUrls: string[] = [];
+    if (selectedFiles.length > 0) {
+      screenshotUrls = await uploadScreenshots();
     }
 
-    // Show loading state
-    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
-    const btnText = submitBtn.querySelector('.btn-text') as HTMLElement;
-    const btnLoader = document.getElementById('btn-loader') as HTMLElement;
+    // Get form values
+    const projectName = (document.getElementById('project_name') as HTMLInputElement).value.trim();
+    const description = (document.getElementById('description') as HTMLTextAreaElement).value.trim();
+    const teamName = (document.getElementById('team_name') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+    const projectUrl = (document.getElementById('project_url') as HTMLInputElement).value.trim();
 
-    submitBtn.disabled = true;
-    btnText.textContent = 'Submitting...';
-    btnLoader.style.display = 'inline-flex';
+    // Insert into Supabase
+    const { error } = await supabase
+      .from('projects')
+      .insert({
+        project_name: projectName,
+        description: description,
+        team_name: teamName,
+        email: email,
+        project_url: projectUrl || null,
+        screenshots: screenshotUrls,
+      });
 
-    try {
-        // Upload screenshots if any
-        let screenshotUrls: string[] = [];
-        if (selectedFiles.length > 0) {
-            screenshotUrls = await uploadScreenshots();
-        }
-
-        // Get form values
-        const projectName = (document.getElementById('project_name') as HTMLInputElement).value.trim();
-        const description = (document.getElementById('description') as HTMLTextAreaElement).value.trim();
-        const teamName = (document.getElementById('team_name') as HTMLInputElement).value.trim();
-        const email = (document.getElementById('email') as HTMLInputElement).value.trim();
-        const projectUrl = (document.getElementById('project_url') as HTMLInputElement).value.trim();
-
-        // Insert into Supabase
-        const { error } = await supabase
-            .from('projects')
-            .insert({
-                project_name: projectName,
-                description: description,
-                team_name: teamName,
-                email: email,
-                project_url: projectUrl || null,
-                screenshots: screenshotUrls,
-            });
-
-        if (error) {
-            throw error;
-        }
-
-        // Show success
-        const form = document.getElementById('project-form') as HTMLElement;
-        const successMessage = document.getElementById('success-message') as HTMLElement;
-        form.style.display = 'none';
-        successMessage.style.display = 'block';
-
-        // Reset state
-        selectedFiles = [];
-        previewUrls = [];
-
-    } catch (error) {
-        console.error('Submission error:', error);
-        alert('There was an error submitting your project. Please try again.');
-    } finally {
-        submitBtn.disabled = false;
-        btnText.textContent = 'Submit Project';
-        btnLoader.style.display = 'none';
+    if (error) {
+      throw error;
     }
-}
 
-export function initSubmitPage() {
-    initNavbar();
+    // Show success
+    const form = document.getElementById('project-form') as HTMLElement;
+    const successMessage = document.getElementById('success-message') as HTMLElement;
+    form.style.display = 'none';
+    successMessage.style.display = 'block';
 
-    // Reset file state
+    // Reset state
     selectedFiles = [];
     previewUrls = [];
 
-    const form = document.getElementById('project-form');
-    const uploadArea = document.getElementById('upload-area');
-    const fileInput = document.getElementById('screenshot-input') as HTMLInputElement;
+  } catch (error: any) {
+    console.error('Submission error:', error);
+    alert(`Error submitting your project: ${error.message || 'Please try again.'}`);
+  } finally {
+    submitBtn.disabled = false;
+    btnText.textContent = 'Submit Project';
+    btnLoader.style.display = 'none';
+  }
+}
 
-    // Form submission
-    form?.addEventListener('submit', handleSubmit);
+export function initSubmitPage() {
+  initNavbar();
 
-    // Upload area click
-    uploadArea?.addEventListener('click', () => {
-        fileInput?.click();
-    });
+  // Reset file state
+  selectedFiles = [];
+  previewUrls = [];
 
-    // File input change
-    fileInput?.addEventListener('change', () => {
-        if (fileInput.files) {
-            handleFiles(fileInput.files);
-        }
-    });
+  const form = document.getElementById('project-form');
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('screenshot-input') as HTMLInputElement;
 
-    // Drag and drop
-    uploadArea?.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('dragover');
-    });
+  // Form submission
+  form?.addEventListener('submit', handleSubmit);
 
-    uploadArea?.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('dragover');
-    });
+  // Upload area click
+  uploadArea?.addEventListener('click', () => {
+    fileInput?.click();
+  });
 
-    uploadArea?.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-        if ((e as DragEvent).dataTransfer?.files) {
-            handleFiles((e as DragEvent).dataTransfer!.files);
-        }
-    });
+  // File input change
+  fileInput?.addEventListener('change', () => {
+    if (fileInput.files) {
+      handleFiles(fileInput.files);
+    }
+  });
 
-    // Submit another
-    const submitAnotherBtn = document.getElementById('submit-another-btn');
-    submitAnotherBtn?.addEventListener('click', () => {
-        const form = document.getElementById('project-form') as HTMLFormElement;
-        const successMessage = document.getElementById('success-message') as HTMLElement;
+  // Drag and drop
+  uploadArea?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
 
-        form.style.display = 'block';
-        successMessage.style.display = 'none';
-        form.reset();
-        selectedFiles = [];
-        previewUrls = [];
-        renderPreviews();
+  uploadArea?.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+  uploadArea?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    if ((e as DragEvent).dataTransfer?.files) {
+      handleFiles((e as DragEvent).dataTransfer!.files);
+    }
+  });
+
+  // Submit another
+  const submitAnotherBtn = document.getElementById('submit-another-btn');
+  submitAnotherBtn?.addEventListener('click', () => {
+    const form = document.getElementById('project-form') as HTMLFormElement;
+    const successMessage = document.getElementById('success-message') as HTMLElement;
+
+    form.style.display = 'block';
+    successMessage.style.display = 'none';
+    form.reset();
+    selectedFiles = [];
+    previewUrls = [];
+    renderPreviews();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
