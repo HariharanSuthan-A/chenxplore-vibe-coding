@@ -58,12 +58,12 @@ export function LandingPage(): string {
       <section class="section" id="topics">
         <div class="container">
           <div class="section-header">
-            <span class="section-badge">Challenges</span>
-            <h2 class="section-title">Competition Topics</h2>
-            <p class="section-subtitle">Choose one of the following problem statements for your project.</p>
+            <span class="section-badge">Challenge</span>
+            <h2 class="section-title">Competition Topic</h2>
+            <p class="section-subtitle">One problem statement</p>
           </div>
           <div class="topics-grid">
-            <!-- Topic 1: Kumaran Home Appliances -->
+            <!-- Topic : Kumaran Home Appliances -->
             <div class="topic-card" id="topic-kumaran">
               <div class="topic-header">
                 <span class="topic-number">01</span>
@@ -93,42 +93,6 @@ export function LandingPage(): string {
                     <div class="topic-tags">
                       <span>Storage Containers</span><span>Water Bottles</span><span>Buckets</span><span>Laundry Baskets</span>
                       <span>Plastic Chairs</span><span>Dish Racks</span><span>Mixer Grinder</span><span>Induction Stove</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Topic 2: Murugan Restaurant -->
-            <div class="topic-card" id="topic-murugan">
-              <div class="topic-header">
-                <span class="topic-number">02</span>
-                <h3 class="topic-title">Murugan Restaurant</h3>
-              </div>
-              <div class="topic-body">
-                <p class="topic-description">Murugan Restaurant is a traditional Tamil Nadu food restaurant serving breakfast, lunch, and dinner with authentic flavors. The restaurant requires a visually appealing website that highlights its full-day menu, attracts local diners, and enables table reservations or takeaway inquiries.</p>
-                
-                <div class="topic-details">
-                  <div class="topic-subgroup">
-                    <h4>Primary Objective</h4>
-                    <p>Establish strong digital presence while showcasing authentic regional cuisine.</p>
-                  </div>
-                  
-                  <div class="topic-subgroup">
-                    <h4>Key Requirements</h4>
-                    <ul class="topic-list">
-                      <li>Traditional themed design with categorized menu</li>
-                      <li>Food gallery, morning - afternoon - night</li>
-                      <li>Contact details and location</li>
-                      <li>Mobile optimization</li>
-                    </ul>
-                  </div>
-
-                  <div class="topic-subgroup">
-                    <h4>Sample Foods</h4>
-                    <div class="topic-tags">
-                      <span>Idli</span><span>Dosa</span><span>South Indian Meals</span><span>Veg Biryani</span>
-                      <span>Chicken Biryani</span><span>Parotta</span><span>Filter Coffee</span><span>Payasam</span>
                     </div>
                   </div>
                 </div>
